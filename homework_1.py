@@ -1,4 +1,18 @@
 # Task 1
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
+class LoggingMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+
+    def log(self, message, level=logging.INFO):
+        self.logger.log(level, message)
+
+
 print("HW1 TASK 1")
 
 
@@ -16,7 +30,7 @@ class Product:
         return f"{self.name}, cost - {self.price}, description - {self.desc}"
 
 
-class Cart:
+class Cart():
     def __init__(self):
         self.__products = {}
 
@@ -44,19 +58,31 @@ cart.add_product(milk)
 print(cart)
 print(cart.total_price())
 
-
 # Task 2
 print("HW1 TASK 2")
 
 
 class Dish:
     def __init__(self, name, description, price):
-        self.name = name
-        self.description = description
-        self.price = price
+        try:
+            if price > 0:
+                self.name = name
+                self.description = description
+                self.price = price
+        except TypeError as error:
+            print(f"{name}: Not a valid price(Wrong data type)")
+        else:
+            if price <= 0:
+                print(f"{name}: Not a valid price(<=0)")
 
     def __str__(self):
-        return f'{self.name}: {self.price}'
+        try:
+            try:
+                return f'{self.name}: {self.price}'
+            except AttributeError as error:
+                return "Not in menu"
+        except TypeError as error:
+            return "Kla"
 
 
 class MenuCategories:
@@ -78,14 +104,17 @@ class MenuCategories:
         return s
 
 
-class Order:
+class Order(LoggingMixin):
     def __init__(self):
+        super(Order, self).__init__()
         self.order_list = []
 
     def add_item(self, item):
         self.order_list.append(item)
+        self.log("Add dish to order")
 
     def remove_item(self, item):
+        self.log("Remove dish from order")
         if item in self.order_list:
             self.order_list.remove(item)
 
@@ -94,6 +123,8 @@ class Order:
 
 
 spaghetti = Dish("spaghetti", "Tasty spaghetti", 10)
+spaghetti2 = Dish("spaghetti2", "Tasty spaghetti2", -11)
+spaghetti3 = Dish("spaghetti3", "Tasty spaghetti3", "11")
 pizza_4_cheese = Dish("pizza 4 cheese", "Tasty pizza with 4 cheeses", 40)
 soup = Dish("soup", "Tasty soup", 15)
 borshc = Dish("borshc", "Tasty borshc", 15)
@@ -119,17 +150,21 @@ order.remove_item(borshc)
 print(order.calculate_total())
 print(menu)
 
-
 # Task HW2.1
 print("HW2 TASK 1")
 
 
 class Discount:
     def __init__(self, disc):
-        self.disc = disc
+        if 0 < disc < 1:
+            self.disc = disc
+        else:
+            print("Not a valid % amount. Calculating with 0%")
+            self.disc = 0
+
 
     def discount(self):
-        return 1 - self.disc
+        raise NotImplementedError
 
 
 class RegularDiscount(Discount):
@@ -147,18 +182,21 @@ class GoldDiscount(Discount):
         return 1 - self.disc
 
 
-class Client:
+class Client(LoggingMixin):
     def __init__(self, name, discount: Discount):
+        super(Client, self).__init__()
         self.name = name
         self.discount = discount
 
     def get_total_price(self, ordered: Order):
-        return ordered.calculate_total() * self.discount.discount()
+        summa = ordered.calculate_total() * self.discount.discount()
+        self.log(f'Customer pay {summa}', logging.INFO)
+        return summa
 
 
-Silver = SilverDiscount(0.1)
-Gold = GoldDiscount(0.2)
 Regular = RegularDiscount(0.05)
+Silver = SilverDiscount(0.1)
+Gold = GoldDiscount(12)
 
 client1 = Client("Kolya", Silver)
 client2 = Client("Ivan", Gold)
