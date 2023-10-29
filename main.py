@@ -63,5 +63,3 @@ if __name__ == "__main__":
             print("Not a valid discount amount")
     except ValueError or AttributeError:
         print("Not a valid price for something")
-
-
