@@ -11,6 +11,7 @@ if __name__ == "__main__":
         print("HW1 TASK 1")
         apple = Product("Apple", 5, "Just an Apple")
         milk = Product("Milk", 20, "A bottle of 2.6% milk")
+        tomato = Product("Tomato", 10, "Tomato")
         cart = Cart()
         cart.add_product(apple)
         cart.add_product(milk)
@@ -19,6 +20,13 @@ if __name__ == "__main__":
         cart.add_product(milk)
         print(cart)
         print(cart.total_price())
+        cart2 = Cart()
+        cart2.add_product(apple)
+        cart2.add_product(apple)
+        cart2.add_product(milk)
+        cart2.add_product(tomato)
+        cart += cart2
+        print(cart)
     except ValueError:
         print("Not a valid price for a Product")
     # Task 2
@@ -45,7 +53,11 @@ if __name__ == "__main__":
         order.add_item(pizza_4_cheese)
         order.add_item(borshc)
         order.add_item(soup)
-
+        order2 = Order()
+        order2 += spaghetti
+        order2 += soup
+        print(f"{order2}\n")
+        print(f"{order}\n")
         print(order.calculate_total())
         order.remove_item(borshc)
         print(order.calculate_total())
