@@ -87,13 +87,14 @@ class Rational:
             return f'{self.a} / {self.b}'
 
 
-x = Rational(1, 1)
-y = Rational(1, 4)
-# z = x + y
-# print(z)
-print(x + y)
-print(x + 1)
-print(2 + x)
-print(2 * x)
-print(y - 2)
-print(2 / x)
+if __name__ == "__main__":
+    x = Rational(1, 1)
+    y = Rational(1, 4)
+    # z = x + y
+    # print(z)
+    print(x + y)
+    print(x + 1)
+    print(2 + x)
+    print(2 * x)
+    print(y - 2)
+    print(2 / x)
