@@ -2,6 +2,41 @@ import loggers
 import products
 
 
+class CartIterator:
+    def __init__(self, products: dict):
+        self.products = products.items()
+        self.index = 0
+        self.product_ = []
+        self.amount_ = []
+        for product, amount in self.products:
+            self.product_.append(product)
+            self.amount_.append(amount)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index < len(self.product_):
+            self.index += 1
+            return f"{self.amount_[self.index - 1]} {self.product_[self.index - 1]}"
+        raise StopIteration
+
+
+class OrderIterator:
+    def __init__(self, products):
+        self.products = products
+        self.index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index < len(self.products):
+            self.index += 1
+            return self.products[self.index - 1]
+        raise StopIteration
+
+
 class Cart:
     def __init__(self):
         self.__products = {}
@@ -28,6 +63,9 @@ class Cart:
 
     def __str__(self):
         return "\n".join(f"{amount} {product}" for product, amount in self.__products.items())
+
+    def __iter__(self):
+        return CartIterator(self.__products)
 
 
 class Order(loggers.LoggingMixin):
@@ -56,6 +94,15 @@ class Order(loggers.LoggingMixin):
 
     def __str__(self):
         return "\n" .join(f"{i}" for i in self.order_list)
+
+    def __getitem__(self, item):
+        return self.order_list[item]
+
+    def __len__(self):
+        return len(self.order_list)
+
+    def __iter__(self):
+        return OrderIterator(self.order_list)
 
 
 class Discount:

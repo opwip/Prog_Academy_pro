@@ -27,6 +27,9 @@ if __name__ == "__main__":
         cart2.add_product(tomato)
         cart += cart2
         print(cart)
+        for i in cart:
+            print("_____________________________________________Test_iter")
+            print(i)
     except ValueError:
         print("Not a valid price for a Product")
     # Task 2
@@ -56,6 +59,10 @@ if __name__ == "__main__":
         order2 = Order()
         order2 += spaghetti
         order2 += soup
+        for i in order:
+            print("_____________________________________________Test_iter")
+            print(i)
+        print("Test_seq", order[1], "Test_seq")
         print(f"{order2}\n")
         print(f"{order}\n")
         print(order.calculate_total())
